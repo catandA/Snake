@@ -8,6 +8,11 @@ module com.catand.snake {
 	requires org.kordamp.ikonli.javafx;
 	requires eu.hansolo.tilesfx;
 	requires com.almasb.fxgl.all;
+	requires static lombok;
+	requires javafx.base;
+	requires annotations;
+	requires com.almasb.fxgl.core;
+	requires javafx.graphics;
 
 	opens com.catand.snake to javafx.fxml;
 	exports com.catand.snake;

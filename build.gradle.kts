@@ -37,6 +37,8 @@ javafx {
 }
 
 dependencies {
+	compileOnly ("org.projectlombok:lombok:1.18.42")
+	annotationProcessor ("org.projectlombok:lombok:1.18.42")
 	implementation("org.controlsfx:controlsfx:11.2.2")
 	implementation("net.synedra:validatorfx:0.6.1") {
 		exclude(group = "org.openjfx")
