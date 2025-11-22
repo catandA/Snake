@@ -10,12 +10,12 @@ public class Map {
 	private Tile[][] tiles;
 	private LinkedList<Tile> snakeBody;
 	private Tile food;
-	private int mapWidth = 20;
-	private int mapHeight = 20;
+	private final int mapWidth;
+	private final int mapHeight;
 
 	public Map(int width, int height) {
 		// 参数赋值
-		if (width <= 5 || height <= 5) {
+		if (width < 5 || height < 5) {
 			throw new IllegalArgumentException("地图宽高必须大于5");
 		}
 		mapWidth = width;

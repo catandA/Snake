@@ -99,8 +99,6 @@ public class SnakeApp extends GameApplication {
 			tail.setContentType(Tile.ContentType.EMPTY);
 			getGameWorld().removeEntity(snakeEntitys.removeLast());
 		}
-		System.out.println("Moving to: " + nextTileCoordinate + ", Pixel: " + nextPixel);
-		System.out.println("Snake body size: " + snakeBody.size() + ", Entities size: " + snakeEntitys.size());
 	}
 
 	private void gameOver() {
