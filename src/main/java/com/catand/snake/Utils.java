@@ -17,6 +17,22 @@ public class Utils {
 		};
 	}
 
+	public static Direction getRelativeDirection(int x1, int y1, int x2, int y2) {
+		int dx = x2 - x1;
+		int dy = y2 - y1;
+
+		if (dx == 0 && dy == 0) {
+			return null;
+		}
+
+		if (Math.abs(dx) > Math.abs(dy)) {
+			return dx > 0 ? Direction.RIGHT : Direction.LEFT;
+		}
+		else {
+			return dy > 0 ? Direction.DOWN : Direction.UP;
+		}
+	}
+
 	private static final Map<Direction, Direction> OPPOSITE = new HashMap<Direction, Direction>() {{
 		put(Direction.UP, Direction.DOWN);
 		put(Direction.RIGHT, Direction.LEFT);

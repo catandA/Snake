@@ -9,6 +9,7 @@ import com.catand.snake.object.ContentComponent;
 import com.catand.snake.object.ContentType;
 import com.catand.snake.object.TileComponent;
 import com.catand.snake.object.TileType;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
@@ -20,11 +21,24 @@ public class GameEntityFactory implements EntityFactory {
 		TileType tileType = data.get("type");
 		int x = data.get("x");
 		int y = data.get("y");
+		Rectangle hollowRect = new Rectangle(Config.TILE_SIZE, Config.TILE_SIZE);
+		if (tileType == TileType.EMPTY) {
+			hollowRect.setStroke(Color.LIGHTGREEN);
+		}
+		if (tileType == TileType.WALL) {
+			hollowRect.setStroke(Color.BURLYWOOD);
+		}
+		hollowRect.setFill(Color.TRANSPARENT);
+		hollowRect.setStrokeWidth(2 * Config.TILE_MARGIN);
+		Rectangle rect = new Rectangle(Config.TILE_SIZE - 2 * Config.TILE_MARGIN,
+				Config.TILE_SIZE - 2 * Config.TILE_MARGIN, tileType.getColor());
+		rect.setTranslateX(Config.TILE_MARGIN);
+		rect.setTranslateY(Config.TILE_MARGIN);
 		return entityBuilder(data)
-				.at(data.getX() + Config.TILE_MARGIN, data.getY() + Config.TILE_MARGIN)
+				.at(data.getX(), data.getY())
 				.type(tileType)
-				.view(new Rectangle(Config.TILE_SIZE - 2 * Config.TILE_MARGIN,
-						Config.TILE_SIZE - 2 * Config.TILE_MARGIN, tileType.getColor()))
+				.view(hollowRect)
+				.view(rect)
 				.with(new TileComponent(x, y, tileType))
 				.build();
 	}
@@ -35,11 +49,14 @@ public class GameEntityFactory implements EntityFactory {
 		int x = data.get("x");
 		int y = data.get("y");
 		EntityBuilder eb = entityBuilder(data)
-				.at(data.getX() + (double) Config.TILE_SIZE / 2, data.getY() + (double) Config.TILE_SIZE / 2)
+				.at(data.getX(), data.getY())
 				.type(contentType)
 				.with(new ContentComponent(x, y, contentType));
-		if (contentType == ContentType.FOOD || contentType == ContentType.SNAKE) {
-			eb.view(new Circle((double) Config.TILE_SIZE / 2 - Config.TILE_MARGIN, contentType.getColor()));
+		if (contentType == ContentType.FOOD) {
+			Circle circle = new Circle((double) Config.TILE_SIZE / 2 - Config.TILE_MARGIN, contentType.getColor());
+			circle.setTranslateX((double) Config.TILE_SIZE / 2);
+			circle.setTranslateY((double) Config.TILE_SIZE / 2);
+			eb.view(circle);
 		}
 		return eb.build();
 	}

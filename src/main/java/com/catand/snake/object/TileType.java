@@ -7,7 +7,7 @@ public enum TileType {
 
 	public Color getColor() {
 		return switch (this) {
-			case EMPTY -> Color.WHITE;
+			case EMPTY -> Color.TRANSPARENT;
 			case WALL -> Color.BROWN;
 		};
 	}

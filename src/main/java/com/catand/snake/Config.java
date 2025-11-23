@@ -10,6 +10,6 @@ public class Config {
 
 	// 界面配置
 	public final static int TILE_SIZE = 20;
-	public final static int TILE_MARGIN = 1;
+	public final static int TILE_MARGIN = 2;
 	public final static int PADDING = 20;
 }

@@ -54,7 +54,7 @@ public class SnakeApp extends GameApplication {
 		// 初始化地图
 		for (int i = 1; i < width - 1; i++) {
 			for (int j = 1; j < height - 1; j++) {
-				mapTiles[i][j] = spawn(i, i, EntityType.TILE, TileType.EMPTY);
+				mapTiles[i][j] = spawn(i, j, EntityType.TILE, TileType.EMPTY);
 			}
 		}
 		for (int i = 0; i < width; i++) {
@@ -79,10 +79,13 @@ public class SnakeApp extends GameApplication {
 		int startY = Math.toIntExact(Math.round(Math.random() * (Config.MAP_HEIGHT - 5) + 2));
 		snakeBody.add(spawn(startX, startY, EntityType.CONTENT, ContentType.SNAKE));
 		mapContent[startX][startY] = snakeBody.getLast();
+		SnakeRender.snakeHead(snakeBody.getFirst(), Direction.RIGHT);
 		snakeBody.add(spawn(startX + 1, startY, EntityType.CONTENT, ContentType.SNAKE));
 		mapContent[startX + 1][startY] = snakeBody.getLast();
+		SnakeRender.snakeBody(snakeBody.getLast(), Direction.LEFT, Direction.DOWN);
 		snakeBody.add(spawn(startX + 1, startY + 1, EntityType.CONTENT, ContentType.SNAKE));
 		mapContent[startX + 1][startY + 1] = snakeBody.getLast();
+		SnakeRender.snakeTail(snakeBody.getLast(), Direction.UP);
 	}
 
 	private void turn(Direction to) {
@@ -116,18 +119,34 @@ public class SnakeApp extends GameApplication {
 		}
 
 		// 头部移动到下一格
+		// 旧头部渲染成身体
+		Entity oldHead = snakeBody.getFirst();
+		ContentComponent oldHeadComponent = oldHead.getComponent(ContentComponent.class);
+		Entity oldTowards = snakeBody.get(1);
+		ContentComponent oldTowardsComponent = oldTowards.getComponent(ContentComponent.class);
+		Direction oldSnakeHeadTowardsDirection = Utils.getRelativeDirection(oldHeadComponent.getX(), oldHeadComponent.getY(), oldTowardsComponent.getX(), oldTowardsComponent.getY());
+		SnakeRender.snakeBody(oldHead, curDirection, oldSnakeHeadTowardsDirection);
+		// 新头部
 		Entity newSnakeHead = spawn(nextX, nextY, EntityType.CONTENT, ContentType.SNAKE);
 		snakeBody.addFirst(newSnakeHead);
 		getGameWorld().removeEntity(nextContent);
 		mapContent[nextX][nextY] = newSnakeHead;
+		SnakeRender.snakeHead(newSnakeHead, Utils.getOppositeDirection(curDirection));
 
 		// 检查吃到食物
 		if (nextContentType == ContentType.FOOD) {
 			updateFood();
 		} else {
-			Entity tail = snakeBody.removeLast();
-			mapContent[tail.getComponent(ContentComponent.class).getX()][tail.getComponent(ContentComponent.class).getY()] = spawn(tail.getComponent(ContentComponent.class).getX(), tail.getComponent(ContentComponent.class).getY(), EntityType.CONTENT, ContentType.EMPTY);
-			getGameWorld().removeEntity(tail);
+			// 删除旧尾部
+			Entity oldTail = snakeBody.removeLast();
+			mapContent[oldTail.getComponent(ContentComponent.class).getX()][oldTail.getComponent(ContentComponent.class).getY()] = spawn(oldTail.getComponent(ContentComponent.class).getX(), oldTail.getComponent(ContentComponent.class).getY(), EntityType.CONTENT, ContentType.EMPTY);
+			getGameWorld().removeEntity(oldTail);
+			// 新尾部
+			Entity tail = snakeBody.getLast();
+			ContentComponent tailComponent = tail.getComponent(ContentComponent.class);
+			ContentComponent tailTowardsComponent = snakeBody.get(snakeBody.size() - 2).getComponent(ContentComponent.class);
+			Direction tailTowardsDirection = Utils.getRelativeDirection(tailComponent.getX(), tailComponent.getY(), tailTowardsComponent.getX(), tailTowardsComponent.getY());
+			SnakeRender.snakeTail(tail, tailTowardsDirection);
 		}
 	}
 
