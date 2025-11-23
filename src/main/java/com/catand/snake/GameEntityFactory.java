@@ -1,5 +1,6 @@
 package com.catand.snake;
 
+import com.almasb.fxgl.dsl.EntityBuilder;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.EntityFactory;
 import com.almasb.fxgl.entity.SpawnData;
@@ -33,11 +34,13 @@ public class GameEntityFactory implements EntityFactory {
 		ContentType contentType = data.get("type");
 		int x = data.get("x");
 		int y = data.get("y");
-		return entityBuilder(data)
+		EntityBuilder eb = entityBuilder(data)
 				.at(data.getX() + (double) Config.TILE_SIZE / 2, data.getY() + (double) Config.TILE_SIZE / 2)
 				.type(contentType)
-				.view(new Circle((double) Config.TILE_SIZE / 2 - Config.TILE_MARGIN, contentType.getColor()))
-				.with(new ContentComponent(x, y, contentType))
-				.build();
+				.with(new ContentComponent(x, y, contentType));
+		if (contentType == ContentType.FOOD || contentType == ContentType.SNAKE) {
+			eb.view(new Circle((double) Config.TILE_SIZE / 2 - Config.TILE_MARGIN, contentType.getColor()));
+		}
+		return eb.build();
 	}
 }
