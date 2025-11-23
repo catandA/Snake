@@ -20,7 +20,7 @@ public class SnakeApp extends GameApplication {
 
 	private Map map;
 	private Entity[][] mapEntity;
-	private LinkedList<Entity> snakeEntitys;
+	private LinkedList<Entity> snakeEntities;
 	private LinkedList<Tile> snakeBody;
 	private Entity foodEntity;
 	private Direction curDirection, nextDirection;
@@ -58,10 +58,10 @@ public class SnakeApp extends GameApplication {
 
 	private void initSnake() {
 		snakeBody = map.getSnakeBody();
-		snakeEntitys = new LinkedList<>();
+		snakeEntities = new LinkedList<>();
 		snakeBody.forEach(tile -> {
 			Pair<Integer, Integer> pixel = Utils.getPixelCoordinateTL(tile.getX(), tile.getY());
-			snakeEntitys.add(FXGL.spawn("Content", new SpawnData(pixel.getKey(), pixel.getValue()).put("contentType", tile.getContentType())));
+			snakeEntities.add(FXGL.spawn("Content", new SpawnData(pixel.getKey(), pixel.getValue()).put("contentType", tile.getContentType())));
 		});
 	}
 
@@ -88,7 +88,7 @@ public class SnakeApp extends GameApplication {
 		nextTile.setContentType(Tile.ContentType.SNAKE);
 		snakeBody.addFirst(nextTile);
 		Pair<Integer, Integer> nextPixel = Utils.getPixelCoordinateTL(nextTileCoordinate.getKey(), nextTileCoordinate.getValue());
-		snakeEntitys.addFirst(FXGL.spawn("Content", new SpawnData(nextPixel.getKey(), nextPixel.getValue()).put("contentType", Tile.ContentType.SNAKE)));
+		snakeEntities.addFirst(FXGL.spawn("Content", new SpawnData(nextPixel.getKey(), nextPixel.getValue()).put("contentType", Tile.ContentType.SNAKE)));
 		if (nextContentType == Tile.ContentType.FOOD) {
 			getGameWorld().removeEntity(foodEntity);
 			map.updateFood();
@@ -97,7 +97,7 @@ public class SnakeApp extends GameApplication {
 		} else {
 			Tile tail = snakeBody.removeLast();
 			tail.setContentType(Tile.ContentType.EMPTY);
-			getGameWorld().removeEntity(snakeEntitys.removeLast());
+			getGameWorld().removeEntity(snakeEntities.removeLast());
 		}
 	}
 
