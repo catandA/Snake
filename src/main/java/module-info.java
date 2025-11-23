@@ -13,6 +13,7 @@ module com.catand.snake {
 	requires annotations;
 	requires com.almasb.fxgl.core;
 	requires javafx.graphics;
+	requires com.almasb.fxgl.entity;
 
 	opens com.catand.snake to javafx.fxml;
 	exports com.catand.snake;
